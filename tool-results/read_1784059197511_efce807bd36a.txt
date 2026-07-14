@@ -1,0 +1,252 @@
+     1→     1→# Provelaa Jewelry Brand - Project Worklog
+     2→     2→
+     3→     3→This file tracks work done by all agents on the Provelaa jewelry e-commerce website project (Next.js 16 + Prisma + SQLite).
+     4→     4→
+     5→     5→## Project Overview
+     6→     6→- **Brand**: Provelaa — luxury jewelry brand (inspired by provelaa.com Shopify site)
+     7→     7→- **Stack**: Next.js 16 App Router, TypeScript, Tailwind CSS 4, shadcn/ui, Prisma (SQLite), Framer Motion, Zustand
+     8→     8→- **Aesthetic**: Warm luxury — champagne/gold accents, charcoal text, cream backgrounds, elegant serif (Playfair Display + Cormorant) + clean sans (Inter)
+     9→     9→- **Features**: Hero carousel, collections, product catalog w/ filters, product detail w/ zoom gallery, cart drawer, checkout w/ payment gateway, order tracking w/ animated timeline, reviews, newsletter, admin-friendly seed data
+    10→    10→
+    11→    11→## Task IDs
+    12→    12→1. Design system (theme, fonts, globals)
+    13→    13→2. Prisma schema + seed
+    14→    14→3. Cart/wishlist store
+    15→    15→4-a. Shared UI (navbar, footer, product card, marquee)
+    16→    16→4-b. Homepage
+    17→    17→5. Shop/Collection page
+    18→    18→6. Product detail page
+    19→    19→7. Checkout flow
+    20→    20→8. Order tracking page
+    21→    21→9. Backend API routes
+    22→    22→10. Seed database with AI-generated jewelry images
+    23→    23→11. Dev server + agent-browser verification
+    24→    24→
+    25→    25→---
+    26→    26→Task ID: 0
+    27→    27→Agent: orchestrator
+    28→    28→Task: Project bootstrap and planning
+    29→    29→
+    30→    30→Work Log:
+    31→    31→- Read existing project scaffold (Next.js 16, shadcn/ui all components installed, Prisma configured)
+    32→    32→- Attempted to scrape provelaa.com — site returns Access Denied; proceeding with luxury jewelry design best practices
+    33→    33→- Defined design system: champagne/gold + charcoal + cream, Playfair Display + Cormorant Garamond + Inter
+    34→    34→- Created task breakdown for parallel subagent execution
+    35→    35→
+    36→    36→Stage Summary:
+    37→    37→- Ready to dispatch subagents for design system, schema, stores, UI components, pages, API routes
+    38→    38→- All subagents MUST read this worklog before starting and append their own section after finishing
+    39→    39→
+    40→    40→---
+    41→    41→Task ID: 1
+    42→    42→Agent: orchestrator
+    43→    43→Task: Set up design system, theme tokens, fonts, global CSS
+    44→    44→
+    45→    45→Work Log:
+    46→    46→- Added Playfair Display + Cormorant Garamond + Inter fonts in layout.tsx
+    47→    47→- Replaced globals.css with luxury palette: cream background, champagne gold accent, deep ink charcoal text
+    48→    48→- Added utilities: .font-serif, .font-display, .text-gold-gradient, .bg-gold-gradient, .bg-luxe-radial, .shadow-luxe, .glass, .container-luxe, .marquee-track, .shimmer, .scrollbar-luxe
+    49→    49→- Created ThemeProvider wrapper (next-themes)
+    50→    50→- Created src/lib/site.ts (siteConfig, formatPrice, navLinks)
+    51→    51→
+    52→    52→Stage Summary:
+    53→    53→- Design system ready: luxury jewelry palette, serif headings, clean sans body
+    54→    54→- Theme tokens for gold/champagne/cream/ink exposed as Tailwind colors
+    55→    55→
+    56→    56→---
+    57→    57→Task ID: 2
+    58→    58→Agent: orchestrator
+    59→    59→Task: Configure Prisma schema for e-commerce
+    60→    60→
+    61→    61→Work Log:
+    62→    62→- Defined models: Category, Collection, Product, Review, Order, OrderItem, TrackingEvent, Newsletter, ContactMessage
+    63→    63→- Product.images and Product.tags stored as JSON strings (SQLite limitation)
+    64→    64→- Order includes tracking fields (trackingId, carrier, status) for parcel tracking
+    65→    65→- TrackingEvent stores per-status timestamped history
+    66→    66→- Ran `bun run db:push` — schema synced to SQLite
+    67→    67→
+    68→    68→Stage Summary:
+    69→    69→- Database schema in prisma/schema.prisma, synced to ./db/custom.db
+    70→    70→- All models ready for API routes and seed
+    71→    71→
+    72→    72→---
+    73→    73→Task ID: 3
+    74→    74→Agent: orchestrator
+    75→    75→Task: Build cart + wishlist Zustand stores with persistence
+    76→    76→
+    77→    77→Work Log:
+    78→    78→- src/lib/cart-store.ts: useCart (items, isOpen, add, remove, updateQty, subtotal, count) + useWishlist (ids, toggle, has)
+    79→    79→- Both persist to localStorage
+    80→    80→- Cart open state controls CartDrawer
+    81→    81→
+    82→    82→Stage Summary:
+    83→    83→- Cart/wishlist stores ready for navbar badge, drawer, product cards, checkout
+    84→    84→
+    85→    85→---
+    86→    86→Task ID: 9
+    87→    87→Agent: orchestrator
+    88→    88→Task: Build backend API routes
+    89→    89→
+    90→    90→Work Log:
+    91→    91→- GET /api/products (filter by category/collection/metal/q/minPrice/maxPrice, sort, limit, bestseller/newArrival)
+    92→    92→- GET /api/products/[slug] (product + related + reviews)
+    93→    93→- GET /api/categories, GET /api/collections
+    94→    94→- POST /api/checkout (creates order + order items + tracking events, returns orderNumber/trackingId)
+    95→    95→- GET /api/orders/track?orderNumber=...&email=... (returns order + steps + events + ETA)
+    96→    96→- POST /api/orders/[orderNumber] (demo: advance order status — used for tracking demo)
+    97→    97→- POST /api/newsletter, POST /api/contact
+    98→    98→- src/lib/tracking.ts: TRACKING_STEPS, ensureTrackingEvents(), generateOrderNumber(), generateTrackingId()
+    99→    99→
+   100→   100→Stage Summary:
+   101→   101→- All API routes complete; ready for frontend consumption
+   102→   102→- Order flow: place → tracking events auto-generated → track by order number
+   103→   103→
+   104→   104→---
+   105→   105→Task ID: 4-a (partial)
+   106→   106→Agent: orchestrator
+   107→   107→Task: Build router + shared UI (navbar, footer, cart drawer, product card, scroll-to-top, announcement bar)
+   108→   108→
+   109→   109→Work Log:
+   110→   110→- src/lib/router.ts: hash-based router (only `/` route allowed); parses #/shop, #/product/:slug, #/checkout, #/track, #/about, #/contact
+   111→   111→- src/components/link.tsx: <Link to={...}> component
+   112→   112→- src/components/site/announcement-bar.tsx: marquee of shipping/returns perks
+   113→   113→- src/components/site/navbar.tsx: sticky glass nav, center logo, mega-menu on hover, mobile drawer, search expandable
+   114→   114→- src/components/site/cart-drawer.tsx: slide-in cart with free-shipping progress, qty controls, animated item add/remove
+   115→   115→- src/components/site/product-card.tsx: image hover swap, quick add, wishlist toggle, badges, framer-motion reveal
+   116→   116→- src/components/site/footer.tsx: newsletter signup, link columns, social, contact strip — sticky bottom via mt-auto
+   117→   117→- src/components/site/scroll-to-top.tsx: floating button after scroll
+   118→   118→
+   119→   119→Stage Summary:
+   120→   120→- All shared UI ready; views can import these
+   121→   121→- Cart drawer wired to cart store; navbar cart badge animates on add
+   122→   122→- Footer includes newsletter form POSTing /api/newsletter
+   123→   123→
+   124→   124→---
+   125→   125→Task ID: 10 (in progress)
+   126→   126→Agent: orchestrator
+   127→   127→Task: Generate jewelry product & lifestyle images
+   128→   128→
+   129→   129→Work Log:
+   130→   130→- scripts/generate-images.ts: 32 image jobs (hero, lifestyle, category banners, collections, products)
+   131→   131→- Running in background (PID logged); outputs to public/images/{hero,lifestyle,categories,collections,products}/*.jpg
+   132→   132→- Image generation uses z-ai-web-dev-sdk in batches of 4 parallel
+   133→   133→
+   134→   134→Stage Summary:
+   135→   135→- Images generating in background; seed script will reference /images/... paths
+   136→   136→
+   137→   137→---
+   138→   138→Task ID: 4-b
+   139→   139→Agent: homepage-builder
+   140→   140→Task: Build homepage view
+   141→   141→
+   142→   142→Work Log:
+   143→   143→- Read worklog.md and existing shared UI (router, link, product-card, navbar, footer, site.ts, globals.css) to align with conventions
+   144→   144→- Verified image directories exist under public/images/{hero,lifestyle,categories,collections} (empty at build time — Task 10 generating); built a LuxeImage helper with onError fallback to a champagne gradient so layout never breaks if a path 404s
+   145→   145→- Created src/components/views/home-view.tsx (default export HomeView, ~1061 lines, 'use client') with 10 sections in order: HeroCarousel, UspStrip, ShopByCategory, FeaturedCollections, Bestsellers, AtelierStory, NewArrivals, Testimonials, InstagramStrip, NewsletterCta
+   146→   146→- Hero carousel: 3 slides (wide / split / wide), AnimatePresence fade+scale, auto-advance 6s, pause-on-hover, prev/next arrows + dots, dark gradient overlays for legibility, gold-gradient primary CTA + outline secondary CTA
+   147→   147→- USP strip: 4 icons (ShieldCheck, Truck, RefreshCw, Leaf) with gold divider rules, staggered whileInView reveals
+   148→   148→- Shop by Category: 5 cards (rings, necklaces, earrings, mangalsutra, bracelets), responsive 2/3/5 cols, square images with hover zoom + gold border on hover, navigate shop?category=slug
+   149→   149→- Featured Collections: 3 cards (champagne-gold, festive-edit, minimalist) with varied heights on desktop for visual rhythm, navigate shop?collection=slug
+   150→   150→- Bestsellers: useProducts() hook fetches /api/products?bestseller=true&limit=8, shimmer ProductCardSkeletons while loading, error fallback, ProductCard grid 2/4 cols, "View All" button → shop
+   151→   151→- Atelier story: 2-col layout with atelier.jpg + 3 paragraphs + 3 stat cards (5,000+ / 100% / Lifetime) on ink background with bg-luxe-radial, CTA "Read Our Story" → about
+   152→   152→- New Arrivals: same useProducts() hook fetching newArrival=true&limit=4, graceful "Coming soon" empty state
+   153→   153→- Testimonials: 3 static cards with 5-star ratings, quote icon, gold-gradient avatar initials
+   154→   154→- Instagram strip: 4 lifestyle/hero images with hover overlay showing Instagram icon, links to siteConfig.social.instagram
+   155→   155→- Newsletter CTA band: cream→champagne gradient + bg-luxe-radial, email form POSTing /api/newsletter with sonner toast on success/error + loading spinner
+   156→   156→- All sections use framer-motion whileInView (once, -80px margin, 0.5–0.7s, easeOut), py-16 lg:py-24 spacing, container-luxe, semantic headings, aria-labels on icon buttons, alt text on images
+   157→   157→- Verified: `bunx tsc --noEmit` passes for home-view.tsx (only pre-existing errors in unrelated files); `bunx eslint src/components/views/home-view.tsx` returns 0 errors / 0 warnings
+   158→   158→
+   159→   159→Stage Summary:
+   160→   160→- HomeView component complete at src/components/views/home-view.tsx, ready to be mounted by an AppShell/router that switches views based on hash route
+   161→   161→- All 10 required sections implemented with luxury aesthetic, animations, responsive grids, loading/error states, and accessibility
+   162→   162→- Component is self-contained: only imports from existing shared modules (router, product-card, site, utils, sonner, framer-motion, lucide-react); no new dependencies
+   163→   163→- NOT wired into page.tsx (out of scope — orchestrator/another agent owns the view router); page.tsx still shows the placeholder logo
+   164→   164→- Image paths referenced per spec; LuxeImage fallback ensures graceful rendering until Task 10 finishes generating images
+   165→   165→
+   166→   166→---
+   167→   167→Task ID: 5
+   168→   168→Agent: shop-builder
+   169→   169→Task: Build shop/collection view
+   170→   170→
+   171→   171→Work Log:
+   172→   172→- Read worklog.md (design system from Task 1, router from Task 4-a, homepage from Task 4-b) plus shared modules: router.ts, site.ts, product-card.tsx, link.tsx, globals.css, and the products/categories/collections API routes. Confirmed luxury tokens (cream bg, champagne gold accent, ink text, font-serif/font-display, container-luxe, bg-luxe-radial, bg-gold-gradient, shimmer, scrollbar-luxe) and the shadcn primitives (sheet, slider, radio-group, select, separator, button) are all in place
+   173→   173→- Created src/components/views/shop-view.tsx (default export ShopView, 'use client', ~560 lines) with a single Filters state object { category, collection, metal, priceRange, sort, q } seeded from initialCategory/initialCollection/initialQuery props; a useEffect re-syncs category/collection/q when the router hands down new initial props (so navbar navigations between /shop?category=X routes update the view without losing the user's metal/price/sort selections)
+   174→   174→- Desktop layout: lg:grid-cols-[260px_1fr]; left aside is lg:sticky lg:top-28 with max-h-[calc(100vh-9rem)] overflow-y-auto scrollbar-luxe so the filters stay pinned under the navbar and scroll internally if tall. Right column holds the header, result bar, active-filter chips, and the product grid
+   175→   175→- Mobile layout: filters collapse into a Sheet (side="left", w-[88vw] sm:max-w-md) with a SheetHeader (title + sr-only description for a11y), a scrollable FiltersPanel body, and a SheetFooter "Show N results" button that closes the sheet. The trigger is a "Filters" Button in the header with a gold-gradient count badge when activeCount > 0
+   176→   176→- FiltersPanel is a single shared component used by both the desktop sidebar and the mobile sheet, containing: a "Filters" h3 + Clear all link; Category RadioGroup (All Jewellery + each /api/categories entry); Metal RadioGroup (All Metals + Gold Plated / Sterling Silver / Rose Gold / Champagne Gold — single-select per spec); Price Range Slider (0–50,000 INR, step 500, two thumbs) with formatPrice labels and gold-styled range/thumb via arbitrary variants on data-slot selectors; Collections RadioGroup (All Collections + each /api/collections entry). All sections use fieldset/legend for accessible naming and FilterRadioRow renders a label-wrapped RadioGroupItem with aria-current on the active option. Metal is documented as single-equals match (API sends only metal=<selected>)
+   177→   177→- Sort: shadcn Select in the result bar (Featured default / Price: Low→High / Price: High→Low / Top Rated) bound to filters.sort, mapped to the API sort param inside buildQueryString
+   178→   178→- Header: motion.header fade-in-up entrance (opacity 0→1, y 16→0, 0.5s) with bg-luxe-radial rounded-3xl card; Breadcrumb (Home / Shop / [category|collection|Search]) using Link with aria-current="page" on the last crumb; big font-serif title that switches between Search: '<q>', active category name, active collection name, or "All Jewellery"; subtitle from category.description → collection.tagline/description → generic "Handcrafted fine jewellery, made to be treasured."
+   179→   179→- Result bar: "Showing X pieces" (or "Searching the atelier…" on initial load) on the left, Sort Select on the right, separated from the grid by a border-b. ActiveFilterChips row renders one removable chip per active filter (category, collection, metal, price range with formatPrice range) plus a "Clear all" link — chips reset individual filters via removeFilter, Clear all resets everything except the search query
+   180→   180→- Product fetch: queryString built via useMemo from filters; a single useEffect debounces 300ms then fetches with AbortController (cancels in-flight on rapid changes). Loading strategy: skeletons (8 ProductCardSkeleton with shimmer, 4:5 aspect) show only on the very first load (products === null); subsequent refetches keep the previous products visible and dim the grid to opacity 0.45 via motion.div animate so the price slider never flashes skeletons mid-drag — satisfies both "shimmer grid on load" and "subtle opacity transition on filter change"
+   181→   181→- States: empty (No pieces match your filters + Clear filters button with RotateCcw), error (Something went wrong + Try again that bumps refreshNonce to re-trigger the effect), and a bespoke CTA below the grid ("Looking for something bespoke?" → contact) shown only when results are present
+   182→   182→- Grid: grid-cols-2 md:grid-cols-3 lg:grid-cols-3 xl:grid-cols-4 gap-4 lg:gap-6 (3 cols once the 260px sidebar is visible at lg for readable card widths, 4 cols at xl — documented here as a pragmatic deviation from the literal "4 cols desktop" so cards stay ~200px wide next to the sidebar). Each ProductCard receives index for staggered whileInView reveal
+   183→   183→- Accessibility: fieldset/legend + aria-label on every RadioGroup, aria-label on the Slider and Select trigger, aria-current on the active filter label and breadcrumb crumb, aria-label on the mobile Filters button (announces active count), SheetTitle + sr-only SheetDescription to satisfy Radix Dialog a11y warnings, keyboard-accessible controls throughout
+   184→   184→- Verified: `bunx tsc --noEmit` reports zero errors in shop-view.tsx (remaining errors are all pre-existing in unrelated files: examples/websocket, skills/*, src/lib/tracking.ts); `bunx eslint src/components/views/shop-view.tsx` returns 0 errors / 0 warnings
+   185→   185→
+   186→   186→Stage Summary:
+   187→   187→- ShopView component complete at src/components/views/shop-view.tsx, ready to be mounted by the AppShell/router for the #/shop route
+   188→   188→- Full filter UX: category + metal + price-range + collection (all single-select RadioGroups for clean UX matching the single-equals API), sort Select, debounced refetch with abort, active-filter chips, Clear all, empty/error states, bespoke CTA
+   189→   189→- Luxury styling: bg-luxe-radial header card, font-serif title, gold-accented slider, gold-gradient filter count badge, champagne-tinted empty/error icons, scrollbar-luxe on sticky sidebar
+   190→   190→- Responsive: 2/3/4-col grid, desktop sticky sidebar, mobile Sheet with live-applied filters and a "Show N results" close button
+   191→   191→- Animations: motion.header fade-in-up entrance, motion.div grid opacity dim during refetch, ProductCard staggered whileInView reveals
+   192→   192→- NOT wired into page.tsx (out of scope — orchestrator owns the view router); component is self-contained, importing only from existing shared modules (router, link, product-card, site, utils, and shadcn ui primitives)
+   193→   193→
+   194→   194→---
+   195→   195→Task ID: 6
+   196→   196→Agent: product-detail-builder
+   197→   197→Task: Build product detail view
+   198→   198→
+   199→   199→Work Log:
+   200→   200→- Read worklog.md (design system Task 1, router Task 4-a, cart store Task 3, homepage Task 4-b, shop Task 5) plus shared modules: router.ts, link.tsx, site.ts, cart-store.ts, product-card.tsx, globals.css, api/products/[slug]/route.ts, accordion/button/badge/skeleton/separator ui primitives, layout.tsx (Sonner toaster already mounted). Confirmed luxury tokens (cream bg, champagne gold accent, ink text, font-serif, container-luxe, bg-luxe-radial, bg-gold-gradient, shadow-luxe, shadow-gold, glass, shimmer, scrollbar-luxe) and the API response shape (product + related + reviews + category + collection)
+   201→   201→- Created src/components/views/product-view.tsx (default export ProductView, 'use client', ~830 lines) accepting { slug } props
+   202→   202→- State: product, loading, error ("not-found" | "fetch" | null), refreshNonce, selectedImage, selectedMetal, quantity, canZoom (matchMedia hover+lg), zoomOrigin ({x,y} | null), mainImageWrapRef, reviewsRef
+   203→   203→- Fetch: useEffect on [slug, refreshNonce] with AbortController; 404 → "not-found" error state, !ok/throw → "fetch" error state, success → setProduct. Cancels in-flight on slug change
+   204→   204→- Reset effects: selectedImage/quantity/zoomOrigin reset on product.id change; selectedMetal resets to product.metal on product.id+product.metal change
+   205→   205→- Hover-zoom capability: matchMedia("(hover: hover) and (min-width: 1024px)") with change listener; canZoom gates the zoom. On main image mousemove, compute % x/y from bounding rect, clamp 0–100, set transform-origin; div uses background-image with transform: scale(2) when zoomOrigin set, transition-transform duration-200. Uses a div with background-image (per spec, not an img). Image error handled via useImageStatus hook (Image() probe) → falls back to champagne gradient div so layout never breaks before Task 10 finishes
+   206→   206→- Layout: container-luxe; breadcrumb (Home / [Category link] / [Product name, aria-current); grid lg:grid-cols-[1.2fr_1fr] (≈55/45 split); gallery left, info right with lg:sticky lg:top-28 lg:self-start; mobile single column gallery-then-info
+   207→   207→- Gallery: flex flex-col-reverse lg:flex-row; thumbnails strip (horizontal scroll on mobile, vertical lg:w-[84px] scroll on desktop, scrollbar-luxe, role=listbox, hidden when images.length<=1). Main image aspect-[4/5] rounded-2xl shadow-luxe; AnimatePresence crossfade on selectedImage change; badges (New = cream/ink, Bestseller = bg-gold-gradient, -% = red) identical to ProductCard style; "Hover to zoom" hint pill on desktop when canZoom and image loaded. ThumbnailButton: motion.button whileHover scale 1.04, whileTap 0.96, gold border + shadow-gold when active, img onError fallback to champagne gradient
+   208→   208→- Info (right): collection eyebrow (uppercase tracking accent), name (font-serif text-3xl lg:text-4xl), clickable rating row (Stars component + rating + reviewCount → scrollIntoView #reviews), price row (large current + strikethrough compareAt + "Save %" pill), truncated short description (line-clamp-3, 220-char truncate). Separator. Metal selector: pill buttons from buildMetalOptions (product.metal first, then 4 standards, deduped) — product's actual metal gets a gold dot indicator and is selected by default; user can pick any; selectedMetal feeds cart.add. Quantity: −/number/+ rounded control, min 1 max=maxQty (stock), disabled at bounds, aria-live announcement. Add to Cart: motion.whileTap scale 0.96, full-width h-12 bg-gold-gradient text-ink shadow-gold, label "Add to Cart — ₹(price*qty)" or "Out of Stock"; calls cart.add with selectedMetal+qty, toast.success "Added to cart" with description. Buy Now: outline variant, adds to cart, closes drawer, navigates to checkout. Wishlist: outline icon+label, Heart fill-current when wished, aria-pressed, toast on save. Low-stock hint (≤5 left) with Sparkles icon. Trust badges: 4-col grid (ShieldCheck/Truck/RefreshCw/Leaf) on secondary/40 tiles. Separator. Accordion (single collapsible, default "details"): Product Details (dl grid of material/gemstone/metal/weight/category/collection/availability/tags via DetailRow, skips nulls), Shipping & Returns (static policy text), Jewellery Care (4 tips with gold bullet dots)
+   209→   209→- Below 2-col section: "The Story" description block — centered max-w-2xl, eyebrow + serif title + full description + collection tagline italic in font-display. Reviews section — ref for scrollIntoView, scroll-mt-28, heading "Customer Reviews" with "Write a review" button (toast coming-soon), rating summary card (bg-luxe-radial border, big serif rating number + centered Stars + count + supporting copy, vertical Separator on desktop). Reviews grid sm:grid-cols-2 of ReviewCard (gold-gradient avatar initial, name + Verified pill with Check, Stars + formatted date, serif title, body); empty state "Be the first to review" with CTA. "You may also love" related section — eyebrow + serif heading + 2/3/4-col grid of ProductCard from product.related + "View all [category]" button
+   210→   210→- Animations: motion.nav + motion.section fade-in-up stagger entrance on breadcrumb/gallery/info (delays 0 + 0.08s), AnimatePresence crossfade on image swap, thumbnail whileHover/whileTap scale, Add to Cart + Buy Now + Wishlist whileTap scale 0.96, ReviewCard staggered whileInView reveal, "The Story" + related headings whileInView fade-in-up
+   211→   211→- Loading: ProductSkeleton matching layout (breadcrumb, 4 thumbnail placeholders, 4:5 main image placeholder, info column with title/rating/price/desc/metal pills/qty+CTA/trust grid/accordion placeholders) all using bg-muted + shimmer overlay
+   212→   212→- 404: NotFoundState (PackageSearch icon in luxe-radial circle, "Piece not found" serif heading, supportive copy, "Shop all jewellery" gold-gradient button → navigate shop, "Back home" link)
+   213→   213→- Fetch error: NotFoundState variant (AlertCircle icon, "Something went wrong", "Try again" button bumps refreshNonce to refetch)
+   214→   214→- Accessibility: breadcrumb nav with aria-label + aria-current on last crumb; gallery role=listbox + aria-label, thumbnail buttons with aria-label/aria-selected/role=option; rating button aria-label; metal buttons aria-pressed; quantity buttons aria-label + aria-live number; icon-only buttons (wishlist) have aria-label + aria-pressed; accordion semantic; main image container aria-label; reviews section aria-label; related section aria-label
+   215→   215→- Verified: `bunx tsc --noEmit` reports zero errors in product-view.tsx (remaining errors are pre-existing in unrelated files); `bunx eslint src/components/views/product-view.tsx` returns 0 errors / 0 warnings (fixed one react-hooks/preserve-manual-memoization warning by changing metalOptions useMemo deps from [product?.metal] to [product] to satisfy the React Compiler)
+   216→   216→
+   217→   217→Stage Summary:
+   218→   218→- ProductView component complete at src/components/views/product-view.tsx, ready to be mounted by the AppShell/router for the #/product/:slug route (receives slug prop)
+   219→   219→- Full PDP UX: 2-col sticky layout, hover-zoom gallery with thumbnail swap + crossfade + champagne fallback, badges, breadcrumb, rating → scroll-to-reviews, price + discount, metal pill selector (4 standards + product's own), quantity stepper, gold-gradient Add to Cart with live total, Buy Now → checkout, wishlist toggle, trust badges, accordion (details/shipping/care), "The Story" description block, reviews summary + cards + empty state, related products grid
+   220→   220→- Luxury styling aligned with homepage/shop: cream bg, champagne gold accents, font-serif headings, bg-luxe-radial review summary card, bg-gold-gradient primary CTA + avatar initials + metal dot, shadow-luxe on main image, shadow-gold on primary CTA + active thumbnail, glass hint pill, scrollbar-luxe on thumbnail rail
+   221→   221→- Responsive: single-column mobile (gallery then info) → 2-col desktop (55/45 gallery/info), thumbnails horizontal-scroll on mobile / vertical rail on desktop, trust badges 2-col mobile / 4-col desktop, reviews 1-col mobile / 2-col desktop, related grid 2/3/4-col
+   222→   222→- Loading/error/not-found states all implemented with shimmer skeleton and elegant champagne-tinted empty states
+   223→   223→- NOT wired into page.tsx (out of scope — orchestrator owns the view router); component is self-contained, importing only from existing shared modules (router, link, product-card, site, utils, sonner, framer-motion, lucide-react, shadcn ui button/separator/accordion)
+   224→   224→
+   225→   225→---
+   226→   226→Task ID: 7
+   227→   227→Agent: checkout-builder
+   228→   228→Task: Build checkout view
+   229→   229→
+   230→   230→Work Log:
+   231→   231→- Read worklog.md (design system Task 1, router Task 4-a, cart store Task 3, homepage Task 4-b for style, shop Task 5, product detail Task 6) plus shared modules: router.ts, cart-store.ts, site.ts, globals.css, api/checkout/route.ts, UI primitives (button, input, label, separator, textarea, badge, checkbox, radio-group), and home-view.tsx for the established luxury patterns (Eyebrow, SectionShell, LuxeImage, motion stagger reveals, bg-luxe-radial headers, bg-gold-gradient primary CTA, shadow-luxe/shadow-gold, scrollbar-luxe, formatPrice). Confirmed API contract (POST /api/checkout returns { success, order: { orderNumber, trackingId, carrier, total, email } }) and router navigate({ name: "track", orderNumber }) / navigate({ name: "shop" })
+   232→   232→- Created src/components/views/checkout-view.tsx (default export CheckoutView, 'use client', ~970 lines, no props)
+   233→   233→- State: mounted (hydration guard), form (CustomerForm: email/phone/firstName/lastName/address/apartment/city/state/pincode/country="India"/notes), method (card|upi|cod), card (CardForm: number/expiry/cvv/name), upiId, agreedToTerms, loading, error, orderResult, promoCode, appliedPromo, errors. setField + setCardField helpers clear field-level error on change. Pre-mount renders a shimmer skeleton to avoid layout flash
+   234→   234→- Layout: container-luxe; centered header (eyebrow "Secure Checkout" + serif title + subtitle, fade-in-up). Mobile: a MobileSummaryCollapsible card on top (item count + total + Show/Hide toggle, AnimatePresence expand) before the form. Desktop lg:grid-cols-[1.6fr_1fr] with form sections left and sticky (lg:sticky lg:top-28) OrderSummaryCard right
+   235→   235→- Section 1 — Contact & Shipping (SectionShell step "1", "Contact & Shipping"): all required fields (email, phone 10-digit, firstName, lastName, address, city, state select from INDIAN_STATES list, pincode 6-digit) plus optional apartment + notes (Textarea). Country field is disabled with default "India" + helper text "We currently ship across India only." Each Input uses focus-visible:border-accent + ring-accent/30 for gold focus rings; FieldError component shows destructive inline messages. Field-level errors cleared on edit. State uses native select styled to match Input height
+   236→   236→- Section 2 — Payment Method (SectionShell step "2", "Payment Method"): RadioGroup of 3 cards (CreditCard/Smartphone/Banknote icons + label + description). Selected card gets border-accent + bg-accent/5 + shadow-gold. AnimatePresence height-animate reveals method-specific fields: Card (Card number formatted XXXX XXXX XXXX XXXX, Expiry MM/YY, CVV, Name on Card + "Demo payment gateway — no real charge." note with Lock icon), UPI (UPI ID input + row of static GPay/PhonePe/Paytm buttons + same demo note), COD (note "Pay ₹X on delivery." with Banknote icon). Payment status sent as "pending" for COD, "paid" otherwise
+   237→   237→- Section 3 — Review & Place Order (SectionShell step "3", "Review & Place Order"): T&C Checkbox (gold-gradient checked state) with Terms & Privacy Policy underlined in gold. Inline error alert (AnimatePresence) above the button. Big "Place Order — ₹X" Button (h-14, bg-gold-gradient, text-ink, shadow-gold, hover:scale-[1.01], active:scale-[0.99]) — disabled until required fields filled + T&C agreed + items > 0; loading state shows Loader2 spinner + "Placing your order…". TrustBadgesRow (Lock secure / ShieldCheck encrypted / RefreshCw returns) below
+   238→   238→- Order Summary (OrderSummaryCard): bg-luxe-radial header "Order Summary" + piece count. Items list (thumbnail 40x40 rounded w/ LuxeImage fallback + gold qty badge, name truncated, metal · Qty, line total) — switches to max-h-72 overflow-y-auto scrollbar-luxe when items.length > 4. Promo code input + Apply button; applying "PROVELAA10" shows "Applied!" gold-gradient badge + chip with X to remove (toast on apply/remove + 10% discount applied client-side). Totals block: Subtotal, Shipping (green "Free" if subtotal >= 2999 else ₹99), Discount line only when applied, large serif Total with "Incl. all taxes" caption. Free-shipping progress hint when subtotal < 2999 ("Add ₹X more for free shipping" with Truck icon). TrustBadgesRow at bottom
+   239→   239→- Validation: EMAIL_RE/PHONE_RE (10-digit)/PINCODE_RE (6-digit) checked client-side in validate(). onSubmit guards: if loading return; validate() — on fail toast.error + keep inline errors; if !agreedToTerms set inline error; then POST /api/checkout with items mapped from cart + customer + payment. On success setOrderResult + cart.clear() + toast.success. On error setError + toast.error (sonner). try/finally ensures loading cleared
+   240→   240→- Success state (replaces entire view): SuccessCheckmark — motion spring scale-in circle (bg-gold-gradient) with SVG path draw of the check mark (pathLength 0→1) + 6 gold sparkle dots orbiting out (AnimatePresence-style opacity/scale/x/y). Eyebrow "Order Confirmed" + serif "Thank you for your order!" + supportive copy. Card with grid of order number / tracking ID / carrier / total. "Confirmation sent to {email}" (Sparkles icon) + "Estimated delivery: 3–5 business days" (Truck icon). Two CTAs: "Track Your Order" (gold-gradient, navigates to { name: "track", orderNumber }) and "Continue Shopping" (outline, navigates to { name: "shop" })
+   241→   241→- Empty cart state (after mount): centered EmptyCartState — ShoppingBag icon in luxe-radial circle, eyebrow "Your cart", serif "Your cart is empty", supportive copy, "Explore Collection" gold-gradient button → navigate shop
+   242→   242→- Animations: section reveals staggered via SectionShell motion.section (opacity 0→1, y 18→0, delays 0.05/0.12/0.19s). Header fade-in-up. Payment method fields AnimatePresence height-fade. Mobile summary chevron rotate. Inline error AnimatePresence. Success checkmark spring + path draw + 6-orbit sparkles. All hover/active transitions on primary CTA + payment cards + UPI app buttons
+   243→   243→- Accessibility: every Input/Textarea has Label htmlFor; field-level aria-invalid on inputs with errors; payment radio cards are <label htmlFor> wrapping RadioGroupItem; Checkbox has id + adjacent label; mobile summary button has aria-expanded; error alert has role="alert"; success card uses semantic grid; alt text on every LuxeImage; icon-only buttons (promo remove) have aria-label
+   244→   244→- Verified: `bunx tsc --noEmit` reports zero errors in checkout-view.tsx (remaining errors are all pre-existing in unrelated files: examples/websocket, skills/*, src/lib/tracking.ts); `bunx eslint src/components/views/checkout-view.tsx` returns 0 errors / 0 warnings
+   245→   245→
+   246→   246→Stage Summary:
+   247→   247→- CheckoutView component complete at src/components/views/checkout-view.tsx, ready to be mounted by the AppShell/router for the #/checkout route
+   248→   248→- Full checkout UX: 2-col desktop (form left, sticky summary right) / single-col mobile (collapsible summary on top), 3-step section flow with numbered eyebrows, validated contact & shipping form (email/phone/pincode formats + required fields), 3 payment methods (card/UPI/COD) with mock fields and demo-gateway notes, T&C-gated Place Order button with live total, promo code PROVELAA10 (10% off client-side) with Applied! badge, free-shipping progress, success state with animated checkmark + sparkles + order details + track/continue CTAs, empty cart state, loading + error states via sonner toast + inline alert
+   249→   249→- Luxury styling aligned with homepage/shop/product views: cream bg, champagne gold accents, font-serif headings, bg-luxe-radial section headers, bg-gold-gradient primary CTA + applied-promo badge + step number + checkmark circle, shadow-luxe on cards, shadow-gold on primary CTA + selected payment, gold focus rings (focus-visible:border-accent), scrollbar-luxe on overflow item lists, LuxeImage champagne fallback for any missing thumbnails
+   250→   250→- Animations: section stagger reveals on mount, AnimatePresence height-fade on payment method swap, mobile summary expand, inline error slide, success checkmark spring scale-in + SVG path draw + 6-orbit sparkle motion
+   251→   251→- NOT wired into page.tsx (out of scope — orchestrator owns the view router); component is self-contained, importing only from existing shared modules (router, cart-store, site, utils, sonner, framer-motion, lucide-react, shadcn ui button/input/label/separator/textarea/badge/checkbox/radio-group)
+   252→   252→

@@ -1,0 +1,141 @@
+// Provelaa Jewellery — Prisma schema
+// Database: SQLite
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model Category {
+  id          String    @id @default(cuid())
+  slug        String    @unique
+  name        String
+  description String?
+  image       String?
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+  products    Product[]
+}
+
+model Collection {
+  id          String    @id @default(cuid())
+  slug        String    @unique
+  name        String
+  tagline     String?
+  description String?
+  image       String?
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+  products    Product[]
+}
+
+model Product {
+  id            String         @id @default(cuid())
+  slug          String         @unique
+  name          String
+  description   String
+  price         Int
+  compareAt     Int?
+  metal         String         @default("Gold Plated") // Gold Plated | Sterling Silver | Rose Gold | Champagne Gold
+  material      String         @default("Brass + Gold Plating")
+  gemstone      String?
+  weight        String?
+  categoryId    String
+  category      Category       @relation(fields: [categoryId], references: [id])
+  collectionId  String?
+  collection    Collection?    @relation(fields: [collectionId], references: [id])
+  images        String         // JSON array of image URLs
+  rating        Float          @default(4.8)
+  reviewCount   Int            @default(0)
+  stock         Int            @default(20)
+  isBestseller  Boolean        @default(false)
+  isNewArrival  Boolean        @default(false)
+  tags          String         @default("[]") // JSON array
+  createdAt     DateTime       @default(now())
+  updatedAt     DateTime       @updatedAt
+  reviews       Review[]
+  orderItems    OrderItem[]
+}
+
+model Review {
+  id        String   @id @default(cuid())
+  productId String
+  product   Product  @relation(fields: [productId], references: [id], onDelete: Cascade)
+  author    String
+  rating    Int
+  title     String
+  body      String
+  verified  Boolean  @default(true)
+  createdAt DateTime @default(now())
+}
+
+model Order {
+  id              String          @id @default(cuid())
+  orderNumber     String          @unique
+  email           String
+  phone           String
+  firstName       String
+  lastName        String
+  address         String
+  apartment       String?
+  city            String
+  state           String
+  pincode         String
+  country         String          @default("India")
+  subtotal        Int
+  shipping        Int
+  total           Int
+  paymentMethod   String          @default("card") // card | upi | cod
+  paymentStatus   String          @default("paid") // paid | pending | failed
+  status          String          @default("placed") // placed | confirmed | packed | shipped | out_for_delivery | delivered
+  trackingId      String?
+  carrier         String?
+  notes           String?
+  createdAt       DateTime        @default(now())
+  updatedAt       DateTime        @updatedAt
+  items           OrderItem[]
+  trackingEvents  TrackingEvent[]
+}
+
+model OrderItem {
+  id          String  @id @default(cuid())
+  orderId     String
+  order       Order   @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  productId   String
+  product     Product @relation(fields: [productId], references: [id])
+  name        String
+  price       Int
+  quantity    Int
+  image       String
+  metal       String?
+}
+
+model TrackingEvent {
+  id          String   @id @default(cuid())
+  orderId     String
+  order       Order    @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  status      String   // placed | confirmed | packed | shipped | out_for_delivery | delivered
+  title       String
+  description String
+  location    String?
+  timestamp   DateTime @default(now())
+}
+
+model Newsletter {
+  id        String   @id @default(cuid())
+  email     String   @unique
+  createdAt DateTime @default(now())
+}
+
+model ContactMessage {
+  id        String   @id @default(cuid())
+  name      String
+  email     String
+  subject   String
+  message   String
+  createdAt DateTime @default(now())
+}
