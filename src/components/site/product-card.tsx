@@ -99,17 +99,17 @@ export function ProductCard({
         {/* Badges */}
         <div className="absolute top-3 left-3 flex flex-col gap-1.5 z-10">
           {product.isNewArrival && (
-            <span className="bg-card/90 backdrop-blur text-ink text-[10px] uppercase tracking-widest px-2.5 py-1 rounded-full font-medium">
+            <span className="bg-sapphire text-ink text-[10px] uppercase tracking-widest px-2.5 py-1 rounded-full font-medium shadow-sm">
               New
             </span>
           )}
           {product.isBestseller && (
-            <span className="bg-gold-gradient text-ink text-[10px] uppercase tracking-widest px-2.5 py-1 rounded-full font-medium">
+            <span className="bg-emerald text-ink text-[10px] uppercase tracking-widest px-2.5 py-1 rounded-full font-medium shadow-sm">
               Bestseller
             </span>
           )}
           {discount > 0 && (
-            <span className="bg-destructive text-destructive-foreground text-[10px] uppercase tracking-widest px-2.5 py-1 rounded-full font-medium">
+            <span className="bg-ruby text-white text-[10px] uppercase tracking-widest px-2.5 py-1 rounded-full font-medium shadow-sm">
               -{discount}%
             </span>
           )}

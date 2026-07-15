@@ -528,17 +528,17 @@ export default function ProductView({ slug }: Props) {
               {/* Badges */}
               <div className="pointer-events-none absolute top-3 left-3 flex flex-col gap-1.5 z-10">
                 {product.isNewArrival && (
-                  <span className="bg-card/90 backdrop-blur text-ink text-[10px] uppercase tracking-widest px-2.5 py-1 rounded-full font-medium">
+                  <span className="bg-sapphire text-ink text-[10px] uppercase tracking-widest px-2.5 py-1 rounded-full font-medium shadow-sm">
                     New
                   </span>
                 )}
                 {product.isBestseller && (
-                  <span className="bg-gold-gradient text-ink text-[10px] uppercase tracking-widest px-2.5 py-1 rounded-full font-medium">
+                  <span className="bg-emerald text-ink text-[10px] uppercase tracking-widest px-2.5 py-1 rounded-full font-medium shadow-sm">
                     Bestseller
                   </span>
                 )}
                 {discount > 0 && (
-                  <span className="bg-destructive text-white text-[10px] uppercase tracking-widest px-2.5 py-1 rounded-full font-medium">
+                  <span className="bg-ruby text-white text-[10px] uppercase tracking-widest px-2.5 py-1 rounded-full font-medium shadow-sm">
                     -{discount}%
                   </span>
                 )}
@@ -642,7 +642,14 @@ export default function ProductView({ slug }: Props) {
                     {m}
                     {isProductMetal && (
                       <span
-                        className="absolute -top-1.5 -right-1.5 h-3 w-3 rounded-full bg-gold-gradient border border-background"
+                        className={cn(
+                          "absolute -top-1.5 -right-1.5 h-3 w-3 rounded-full border border-background",
+                          m === "Rose Gold" && "bg-accent",
+                          m === "Sterling Silver" && "bg-platinum",
+                          m === "Gold Plated" && "bg-gold",
+                          m === "Champagne Gold" && "bg-secondary",
+                          !["Rose Gold", "Sterling Silver", "Gold Plated", "Champagne Gold"].includes(m) && "bg-gold-gradient"
+                        )}
                         title="Default metal"
                       />
                     )}
